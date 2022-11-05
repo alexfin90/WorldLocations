@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "155160835937",
+    "firebase_url": "https://exposicily-23212-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "exposicily-23212",
+    "storage_bucket": "exposicily-23212.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:155160835937:android:a9e813a4a92edf6ba63720",
+        "android_client_info": {
+          "package_name": "com.softdream.exposicily"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "155160835937-4crlv95ge4js7tkkgjp12635cqgabtl1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCFsK6nAIN5tMIzgdQ2oLnfWnsYMr8Uyq0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "155160835937-4crlv95ge4js7tkkgjp12635cqgabtl1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
