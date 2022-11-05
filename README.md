@@ -1,2 +1,9 @@
 # ExpoSicily
-Demo showing unesco site in Sicily (Compose + Clean Architecture + Navigation + Material 3)
+Demo Android APP showing Unesco site in Sicily Italy
+Clean Architecture
+Compose
+Material3
+Navigation
+Coroutines
+
+
