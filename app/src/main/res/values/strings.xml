@@ -2,5 +2,5 @@
     <string name="app_name">ExpoSicily</string>
     <string name="icon_expo_sicily_location">Icon of a location point for expoSicily App</string>
 
-
+    <string name="locationsScreen">locations</string>
 </resources>

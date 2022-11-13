@@ -2,6 +2,7 @@ package com.softdream.exposicily
 
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -18,19 +19,20 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.softdream.exposicily.data.remote.DtoLocation
-
 import com.softdream.exposicily.presentation.list.LocationViewModel
 
 
 @Composable
 @Preview(showBackground = true)
-fun LocationScreen() {
-    var viewModel: LocationViewModel = viewModel()
+fun LocationScreen(
+    onItemClick: (id: Int) -> Unit = {}
+) {
+    val viewModel: LocationViewModel = viewModel()
     val locations = viewModel.state.value
     val isLoading = locations.isEmpty()
     LazyColumn(contentPadding = PaddingValues()) {
         items(locations) { location ->
-            LocationItem(item = location)
+            LocationItem(item = location, onItemClick)
         }
     }
     Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
@@ -41,11 +43,12 @@ fun LocationScreen() {
 }
 
 @Composable
-
-fun LocationItem(item: DtoLocation) {
+fun LocationItem(item: DtoLocation, onItemClick: (id: Int) -> Unit) {
     Card(
         elevation = CardDefaults.cardElevation(),
-        modifier = Modifier.padding(dimensionResource(R.dimen.mediumPadding))
+        modifier = Modifier
+            .padding(dimensionResource(R.dimen.mediumPadding))
+            .clickable { onItemClick(item.id) }
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -58,13 +61,20 @@ fun LocationItem(item: DtoLocation) {
 }
 
 @Composable
-fun LocationDetails(title: String, message: String, weight: Modifier) {
-    Column(modifier = weight) {
+fun LocationDetails(
+    title: String,
+    message: String,
+    modifier: Modifier,
+    horizontalAlignment: Alignment.Horizontal = Alignment.Start
+) {
+    Column(modifier = modifier, horizontalAlignment = horizontalAlignment) {
         Text(text = title, style = MaterialTheme.typography.titleMedium)
         Text(
             text = message,
             style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.alpha(0.8f)
+            modifier = Modifier
+                .alpha(0.8f)
+                .padding(top = dimensionResource(id = R.dimen.mediumPadding))
         )
     }
 }

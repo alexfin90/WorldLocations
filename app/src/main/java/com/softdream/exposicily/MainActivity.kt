@@ -12,8 +12,15 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.softdream.exposicily.presentation.detail.LocationDetailScreen
 import com.softdream.exposicily.ui.theme.ExpoSicilyTheme
 
 class MainActivity : ComponentActivity() {
@@ -27,9 +34,8 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxWidth(),
                     color = MaterialTheme.colorScheme.background,
-
                 ) {
-                    LocationScreen()
+                    ExpoSicilyApp()
                 }
             }
         }
@@ -37,7 +43,28 @@ class MainActivity : ComponentActivity() {
 
 
     @Composable
-    fun testCrashButton() {
+    fun ExpoSicilyApp() {
+        val locations = stringResource(R.string.locationsScreen)
+        val navController = rememberNavController()
+        NavHost(navController, startDestination = locations) {
+            composable(route = locations) {
+                LocationScreen { id -> navController.navigate("$locations/$id") }
+            }
+            composable(
+                route = "$locations/{location_id}", arguments =
+                listOf(navArgument("location_id") {
+                    type = NavType.IntType
+                    defaultValue = 0
+                })
+            ) {
+                LocationDetailScreen()
+            }
+        }
+
+    }
+
+    @Composable
+    fun TestCrashButton() {
         Column(
             modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.SpaceEvenly,
             horizontalAlignment = Alignment.CenterHorizontally,

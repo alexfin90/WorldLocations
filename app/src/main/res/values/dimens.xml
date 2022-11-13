@@ -4,4 +4,5 @@
     <dimen name="smallPadding">4dp</dimen>
     <dimen name="mediumPadding">8dp</dimen>
     <dimen name="largePadding">16dp</dimen>
+    <dimen name="extraLargePadding">32dp</dimen>
 </resources>
