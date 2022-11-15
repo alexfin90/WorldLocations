@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
@@ -42,14 +43,18 @@ fun LocationDetailScreen() {
             )
 
             AsyncImage(
-                item.property.imageUrl, contentDescription = item.property.site,
+                model = item.property.imageUrl,
+                contentDescription = item.property.site,
                 modifier = Modifier.size(400.dp, 400.dp),
                 filterQuality = FilterQuality.High,
-                contentScale = ContentScale.Fit
+                contentScale = ContentScale.Fit,
+                placeholder =  painterResource(id = R.drawable.ic_launcher_foreground),
+                alpha = 0.8f
             )
 
+
             Text(
-                text = "More Info Coming soon!",
+                text = item.property.location,
                 Modifier.padding(vertical = dimensionResource(id = R.dimen.mediumPadding))
             )
         }
