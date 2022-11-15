@@ -17,7 +17,6 @@ class LocationDetailViewModel(stateHandle: SavedStateHandle) : ViewModel() {
     private var restInterface: LocationApiService
     val state = mutableStateOf<DtoLocation?>(null)
 
-
     init {
         val retrofit: Retrofit = Retrofit.Builder().addConverterFactory(
             GsonConverterFactory.create()
