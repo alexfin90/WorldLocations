@@ -16,20 +16,23 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.softdream.exposicily.data.remote.RemoteLocation
+import com.softdream.exposicily.data.local.LocalLocation
 import com.softdream.exposicily.presentation.list.LocationViewModel
 
+lateinit var viewModel: LocationViewModel
 
 @Composable
 @Preview(showBackground = true)
 fun LocationScreen(
     onItemClick: (id: Int) -> Unit = {}
 ) {
-    val viewModel: LocationViewModel = viewModel()
+    viewModel = viewModel()
     val locations = viewModel.state.value
-    val isLoading = locations.isEmpty()
+    val error = viewModel.errorState.value
+    val isLoading = locations.isEmpty() && error.isEmpty()
     LazyColumn(contentPadding = PaddingValues()) {
         items(locations) { location ->
             LocationItem(item = location, onItemClick)
@@ -38,12 +41,37 @@ fun LocationScreen(
     Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
         if (isLoading) {
             CircularProgressIndicator()
+        } else if (error.isNotEmpty()) {
+            ErrorButton(errorText = error)
         }
     }
 }
 
 @Composable
-fun LocationItem(item: RemoteLocation, onItemClick: (id: Int) -> Unit) {
+fun ErrorButton(errorText: String) {
+    Column(
+        modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.SpaceEvenly,
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Button(
+            onClick = { viewModel.retryGetLocation() },
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.errorContainer,
+                contentColor = MaterialTheme.colorScheme.onErrorContainer
+            ),
+            shape = MaterialTheme.shapes.small
+        ) {
+            Text(
+                text = errorText,
+                style = MaterialTheme.typography.titleMedium,
+                textAlign = TextAlign.Center
+            )
+        }
+    }
+}
+
+@Composable
+fun LocationItem(item: LocalLocation, onItemClick: (id: Int) -> Unit) {
     Card(
         elevation = CardDefaults.cardElevation(),
         modifier = Modifier

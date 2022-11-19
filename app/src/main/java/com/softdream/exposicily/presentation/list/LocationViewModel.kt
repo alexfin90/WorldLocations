@@ -6,22 +6,26 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.softdream.exposicily.BuildConfig
 import com.softdream.exposicily.ExpoSicilyApplication
+import com.softdream.exposicily.R
+import com.softdream.exposicily.data.local.LocalLocation
 import com.softdream.exposicily.data.local.LocationsDb
 import com.softdream.exposicily.data.remote.LocationApiService
-import com.softdream.exposicily.data.remote.RemoteLocation
 import com.softdream.exposicily.data.remote.toLocalLocation
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.net.ConnectException
+import java.net.UnknownHostException
 
 class LocationViewModel : ViewModel() {
     private var restInterface: LocationApiService
     private var locationDao = LocationsDb.getDaoInstance(ExpoSicilyApplication.getAppContext())
-
-    var state = mutableStateOf(emptyList<RemoteLocation>())
+    var state = mutableStateOf(emptyList<LocalLocation>())
+    var errorState = mutableStateOf("")
     private val errorHandle =
         CoroutineExceptionHandler { _, exception ->
             run {
@@ -39,24 +43,43 @@ class LocationViewModel : ViewModel() {
     }
 
     private fun getLocations() {
-
+        errorState.value = ""
         //Note launch use for default  Dispatchers.MAIN
         viewModelScope.launch(errorHandle) {
-            val locations = getRemoteLocations()
-            state.value = locations
+            state.value = getALLLocations()
         }
     }
 
-    private suspend fun getRemoteLocations(): List<RemoteLocation> {
+    fun retryGetLocation(){
+        getLocations()
+    }
+
+
+    private suspend fun getALLLocations(): List<LocalLocation> {
         //Note Retrofit  set behind the scenes Dispatchers.IO for all suspend methods from within its interface
 
         return withContext(Dispatchers.IO) {
-            val locations = restInterface.getLocations()
-            locationDao?.addAll(locations.map { it.toLocalLocation() })
-            return@withContext locations
+            try {
+                refreshCache()
+            } catch (e: Exception) {
+                when (e) {
+                    is UnknownHostException,
+                    is ConnectException,
+                    is HttpException -> {
+                        if (locationDao!!.getAll().isEmpty())
+                            errorState.value = ExpoSicilyApplication.getAppContext().getString(R.string.network_error)
+                    }
+                    else -> throw  e
+                }
+            }
+            return@withContext locationDao!!.getAll()
         }
-
-
     }
+
+    private suspend fun refreshCache() {
+        val locations = restInterface.getLocations()
+        locationDao?.addAll(locations.map { it.toLocalLocation() })
+    }
+
 
 }
