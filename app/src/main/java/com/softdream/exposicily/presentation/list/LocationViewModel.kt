@@ -5,16 +5,23 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.softdream.exposicily.BuildConfig
-import com.softdream.exposicily.data.remote.DtoLocation
+import com.softdream.exposicily.ExpoSicilyApplication
+import com.softdream.exposicily.data.local.LocationsDb
 import com.softdream.exposicily.data.remote.LocationApiService
+import com.softdream.exposicily.data.remote.RemoteLocation
+import com.softdream.exposicily.data.remote.toLocalLocation
 import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class LocationViewModel : ViewModel() {
     private var restInterface: LocationApiService
-    var state = mutableStateOf(emptyList<DtoLocation>())
+    private var locationDao = LocationsDb.getDaoInstance(ExpoSicilyApplication.getAppContext())
+
+    var state = mutableStateOf(emptyList<RemoteLocation>())
     private val errorHandle =
         CoroutineExceptionHandler { _, exception ->
             run {
@@ -40,9 +47,16 @@ class LocationViewModel : ViewModel() {
         }
     }
 
-    private suspend fun getRemoteLocations(): List<DtoLocation> {
+    private suspend fun getRemoteLocations(): List<RemoteLocation> {
         //Note Retrofit  set behind the scenes Dispatchers.IO for all suspend methods from within its interface
-        return restInterface.getLocations()
+
+        return withContext(Dispatchers.IO) {
+            val locations = restInterface.getLocations()
+            locationDao?.addAll(locations.map { it.toLocalLocation() })
+            return@withContext locations
+        }
+
+
     }
 
 }

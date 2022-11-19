@@ -18,7 +18,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.softdream.exposicily.data.remote.DtoLocation
+import com.softdream.exposicily.data.remote.RemoteLocation
 import com.softdream.exposicily.presentation.list.LocationViewModel
 
 
@@ -43,7 +43,7 @@ fun LocationScreen(
 }
 
 @Composable
-fun LocationItem(item: DtoLocation, onItemClick: (id: Int) -> Unit) {
+fun LocationItem(item: RemoteLocation, onItemClick: (id: Int) -> Unit) {
     Card(
         elevation = CardDefaults.cardElevation(),
         modifier = Modifier

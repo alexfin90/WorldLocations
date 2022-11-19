@@ -5,8 +5,8 @@ import retrofit2.http.Query
 
 interface LocationApiService {
     @GET("/unescosites.json")
-    suspend fun getLocations(): List<DtoLocation>
+    suspend fun getLocations(): List<RemoteLocation>
 
     @GET("/unescosites.json?orderBy=\"r_id\"")
-    suspend fun getLocation(@Query("equalTo") id: Int): Map<String,DtoLocation>
+    suspend fun getLocation(@Query("equalTo") id: Int): Map<String,RemoteLocation>
 }
