@@ -47,9 +47,8 @@ fun LocationDetailScreen() {
                 contentDescription = item.property.site,
                 modifier = Modifier.size(400.dp, 400.dp),
                 filterQuality = FilterQuality.High,
-                contentScale = ContentScale.Fit,
+                contentScale = ContentScale.Crop,
                 placeholder =  painterResource(id = R.drawable.ic_launcher_foreground),
-                alpha = 0.8f
             )
 
 
