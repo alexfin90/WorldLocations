@@ -15,6 +15,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import com.softdream.exposicily.ErrorButton
 import com.softdream.exposicily.LocationDetails
 import com.softdream.exposicily.R
 
@@ -23,43 +24,46 @@ import com.softdream.exposicily.R
 fun LocationDetailScreen() {
     val viewModel: LocationDetailViewModel = viewModel()
     val item = viewModel.state.value
-
-    if (item != null) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .padding(
-                    dimensionResource(R.dimen.largePadding)
-                )
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-        ) {
-
-            LocationDetails(
-                title = item.property.site,
-                message = item.property.shortDescription,
-                Modifier.padding(bottom = dimensionResource(id = R.dimen.extraLargePadding)),
-                Alignment.CenterHorizontally
-            )
-
-            AsyncImage(
-                model = item.property.imageUrl,
-                contentDescription = item.property.site,
-                modifier = Modifier.size(400.dp, 400.dp),
-                filterQuality = FilterQuality.High,
-                contentScale = ContentScale.Crop,
-                placeholder =  painterResource(id = R.drawable.ic_launcher_foreground),
-            )
-
-
-            Text(
-                text = item.property.location,
-                Modifier.padding(vertical = dimensionResource(id = R.dimen.mediumPadding))
-            )
-        }
-    } else {
+    val error = viewModel.errorState.value
+    val isLoading = item == null && error.isEmpty()
+    if (isLoading) {
         Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
             CircularProgressIndicator()
+        }
+    } else {
+        if (item != null) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .padding(
+                        dimensionResource(R.dimen.largePadding)
+                    )
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+            ) {
+                LocationDetails(
+                    title = item.property.site,
+                    message = item.property.shortDescription,
+                    Modifier.padding(bottom = dimensionResource(id = R.dimen.extraLargePadding)),
+                    Alignment.CenterHorizontally
+                )
+                AsyncImage(
+                    model = item.property.imageUrl,
+                    contentDescription = item.property.site,
+                    modifier = Modifier.size(400.dp, 400.dp),
+                    filterQuality = FilterQuality.High,
+                    contentScale = ContentScale.Crop,
+                    placeholder = painterResource(id = R.drawable.ic_launcher_foreground),
+                )
+                item.property.let {
+                    Text(
+                        text = it.location,
+                        Modifier.padding(vertical = dimensionResource(id = R.dimen.mediumPadding))
+                    )
+                }
+            }
+        } else if (error.isNotEmpty()) {
+            ErrorButton(errorText = error,viewModel)
         }
     }
 }

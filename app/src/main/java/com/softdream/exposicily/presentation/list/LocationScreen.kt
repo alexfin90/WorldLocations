@@ -18,18 +18,19 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.softdream.exposicily.data.local.LocalLocation
+import com.softdream.exposicily.presentation.detail.LocationDetailViewModel
 import com.softdream.exposicily.presentation.list.LocationViewModel
 
-lateinit var viewModel: LocationViewModel
 
 @Composable
 @Preview(showBackground = true)
 fun LocationScreen(
     onItemClick: (id: Int) -> Unit = {}
 ) {
-    viewModel = viewModel()
+    val viewModel: LocationViewModel = viewModel()
     val locations = viewModel.state.value
     val error = viewModel.errorState.value
     val isLoading = locations.isEmpty() && error.isEmpty()
@@ -42,19 +43,24 @@ fun LocationScreen(
         if (isLoading) {
             CircularProgressIndicator()
         } else if (error.isNotEmpty()) {
-            ErrorButton(errorText = error)
+            ErrorButton(errorText = error, viewModel)
         }
     }
 }
 
 @Composable
-fun ErrorButton(errorText: String) {
+fun ErrorButton(errorText: String, viewModel: ViewModel) {
     Column(
         modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Button(
-            onClick = { viewModel.retryGetLocation() },
+            onClick = {
+                when (viewModel) {
+                    is LocationViewModel -> viewModel.retryGetLocations()
+                    is LocationDetailViewModel -> viewModel.retryGetLocation()
+                }
+            },
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.errorContainer,
                 contentColor = MaterialTheme.colorScheme.onErrorContainer

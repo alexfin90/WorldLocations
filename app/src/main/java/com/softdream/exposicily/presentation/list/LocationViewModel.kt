@@ -46,16 +46,16 @@ class LocationViewModel : ViewModel() {
         errorState.value = ""
         //Note launch use for default  Dispatchers.MAIN
         viewModelScope.launch(errorHandle) {
-            state.value = getALLLocations()
+            state.value = getAllLocations()
         }
     }
 
-    fun retryGetLocation(){
+    fun retryGetLocations(){
         getLocations()
     }
 
 
-    private suspend fun getALLLocations(): List<LocalLocation> {
+    private suspend fun getAllLocations(): List<LocalLocation> {
         //Note Retrofit  set behind the scenes Dispatchers.IO for all suspend methods from within its interface
 
         return withContext(Dispatchers.IO) {
