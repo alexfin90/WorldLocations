@@ -1,6 +1,7 @@
 package com.softdream.exposicily.presentation.list
 
 import android.util.Log
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,9 +12,11 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 
 class LocationViewModel : ViewModel() {
+    //ViewModel only modify the UI state  and call domain layer
     private val repository = LocationRepository()
-
-    val state = mutableStateOf(LocationScreenState(listOf()))
+    private val _state = mutableStateOf(LocationScreenState(listOf()))
+    //expose the state to compose without possibility to modify state
+    val state : State<LocationScreenState> get() = _state
 
     private val errorHandle =
         CoroutineExceptionHandler { _, exception ->
@@ -23,7 +26,7 @@ class LocationViewModel : ViewModel() {
                     exception.message ?: ExpoSicilyApplication.getAppContext()
                         .getString(R.string.generic_error)
                 )
-                state.value = state.value.copy(
+                _state.value = _state.value.copy(
                     isLoading = false,
                     error = exception.message ?: ExpoSicilyApplication.getAppContext()
                         .getString(R.string.generic_error)
@@ -40,12 +43,12 @@ class LocationViewModel : ViewModel() {
         //Note launch use for default  Dispatchers.MAIN
         viewModelScope.launch(errorHandle) {
             val locations = repository.getAllLocations()
-            state.value = state.value.copy(locations = locations, isLoading = false)
+            _state.value = _state.value.copy(locations = locations, isLoading = false)
         }
     }
 
     fun retryGetLocations() {
-        state.value = state.value.copy(isLoading = true, error = "")
+        _state.value = _state.value.copy(isLoading = true, error = "")
         getLocations()
     }
 

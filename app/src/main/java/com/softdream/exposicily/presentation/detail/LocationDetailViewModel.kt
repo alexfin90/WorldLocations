@@ -1,6 +1,7 @@
 package com.softdream.exposicily.presentation.detail
 
 import android.util.Log
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -12,8 +13,11 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 
 class LocationDetailViewModel(stateHandle: SavedStateHandle) : ViewModel() {
+    //ViewModel only modify the UI state  and call domain layer
     private val repository = LocationRepository()
-    var state = mutableStateOf((LocationDetailScreenState()))
+    private var _state = mutableStateOf((LocationDetailScreenState()))
+    //expose the state to compose without possibility to modify state
+    val state: State<LocationDetailScreenState>  get() = _state
 
     private val errorHandle =
         CoroutineExceptionHandler { _, exception ->
@@ -23,7 +27,7 @@ class LocationDetailViewModel(stateHandle: SavedStateHandle) : ViewModel() {
                     exception.message ?: ExpoSicilyApplication.getAppContext()
                         .getString(R.string.generic_error)
                 )
-                state.value = state.value.copy(
+                _state.value = _state.value.copy(
                     isLoading = false,
                     error = exception.message ?: ExpoSicilyApplication.getAppContext()
                         .getString(R.string.generic_error)
@@ -35,7 +39,7 @@ class LocationDetailViewModel(stateHandle: SavedStateHandle) : ViewModel() {
 
     init {
         val lastIDLocation = stateHandle.get<Int>("location_id") ?: 0
-        state.value = state.value.copy(lastIDLocation = lastIDLocation)
+        _state.value = _state.value.copy(lastIDLocation = lastIDLocation)
         getLocation(lastIDLocation)
     }
 
@@ -43,13 +47,13 @@ class LocationDetailViewModel(stateHandle: SavedStateHandle) : ViewModel() {
         //Note launch use for default  Dispatchers.MAIN
         viewModelScope.launch(errorHandle) {
             val location = repository.getLocationByID(id)
-            state.value = state.value.copy(location = location, isLoading = false)
+            _state.value = _state.value.copy(location = location, isLoading = false)
         }
     }
 
 
     fun retryGetLocation() {
-        state.value = state.value.copy(isLoading = true, error = "")
-        getLocation(state.value.lastIDLocation)
+        _state.value = _state.value.copy(isLoading = true, error = "")
+        getLocation(_state.value.lastIDLocation)
     }
 }
