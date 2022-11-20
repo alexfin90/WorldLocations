@@ -31,21 +31,27 @@ fun LocationScreen(
     onItemClick: (id: Int) -> Unit = {}
 ) {
     val viewModel: LocationViewModel = viewModel()
-    val locations = viewModel.state.value
-    val error = viewModel.errorState.value
-    val isLoading = locations.isEmpty() && error.isEmpty()
-    LazyColumn(contentPadding = PaddingValues()) {
-        items(locations) { location ->
-            LocationItem(item = location, onItemClick)
+    val state = viewModel.state.value
+    when {
+        state.locations.isNotEmpty() -> {
+            LazyColumn(contentPadding = PaddingValues()) {
+                items(state.locations) { location ->
+                    LocationItem(item = location, onItemClick)
+                }
+            }
+        }
+        state.isLoading -> Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.fillMaxSize()
+        ) { CircularProgressIndicator() }
+        state.error.isNotBlank() -> Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            ErrorButton(errorText = state.error, viewModel)
         }
     }
-    Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
-        if (isLoading) {
-            CircularProgressIndicator()
-        } else if (error.isNotEmpty()) {
-            ErrorButton(errorText = error, viewModel)
-        }
-    }
+
 }
 
 @Composable

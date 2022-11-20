@@ -24,12 +24,13 @@ import java.net.UnknownHostException
 class LocationViewModel : ViewModel() {
     private var restInterface: LocationApiService
     private var locationDao = LocationsDb.getDaoInstance(ExpoSicilyApplication.getAppContext())
-    var state = mutableStateOf(emptyList<LocalLocation>())
-    var errorState = mutableStateOf("")
+    val state = mutableStateOf(LocationScreenState(listOf()))
+
     private val errorHandle =
         CoroutineExceptionHandler { _, exception ->
             run {
                 Log.w(this.javaClass.simpleName, "API ERROR")
+                state.value = state.value.copy(isLoading = false, error = exception.message ?: "API ERROR")
                 exception.printStackTrace()
             }
         }
@@ -43,14 +44,15 @@ class LocationViewModel : ViewModel() {
     }
 
     private fun getLocations() {
-        errorState.value = ""
         //Note launch use for default  Dispatchers.MAIN
         viewModelScope.launch(errorHandle) {
-            state.value = getAllLocations()
+            val locations = getAllLocations()
+            state.value = state.value.copy(locations = locations, isLoading = false )
         }
     }
 
-    fun retryGetLocations(){
+    fun retryGetLocations() {
+        state.value = state.value.copy(isLoading = true, error = "")
         getLocations()
     }
 
@@ -67,7 +69,11 @@ class LocationViewModel : ViewModel() {
                     is ConnectException,
                     is HttpException -> {
                         if (locationDao!!.getAll().isEmpty())
-                            errorState.value = ExpoSicilyApplication.getAppContext().getString(R.string.network_error)
+                            state.value = state.value.copy(
+                                isLoading = false,
+                                error = ExpoSicilyApplication.getAppContext()
+                                    .getString(R.string.network_error)
+                            )
                     }
                     else -> throw  e
                 }

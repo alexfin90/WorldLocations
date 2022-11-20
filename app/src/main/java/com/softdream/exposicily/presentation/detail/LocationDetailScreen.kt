@@ -23,15 +23,9 @@ import com.softdream.exposicily.R
 @Composable
 fun LocationDetailScreen() {
     val viewModel: LocationDetailViewModel = viewModel()
-    val item = viewModel.state.value
-    val error = viewModel.errorState.value
-    val isLoading = item == null && error.isEmpty()
-    if (isLoading) {
-        Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
-            CircularProgressIndicator()
-        }
-    } else {
-        if (item != null) {
+    val state = viewModel.state.value
+    when {
+        state.location != null -> {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
@@ -42,28 +36,39 @@ fun LocationDetailScreen() {
                     .verticalScroll(rememberScrollState())
             ) {
                 LocationDetails(
-                    title = item.property.site,
-                    message = item.property.shortDescription,
+                    title = state.location.property.site,
+                    message = state.location.property.shortDescription,
                     Modifier.padding(bottom = dimensionResource(id = R.dimen.extraLargePadding)),
                     Alignment.CenterHorizontally
                 )
                 AsyncImage(
-                    model = item.property.imageUrl,
-                    contentDescription = item.property.site,
+                    model = state.location.property.imageUrl,
+                    contentDescription = state.location.property.site,
                     modifier = Modifier.size(400.dp, 400.dp),
                     filterQuality = FilterQuality.High,
                     contentScale = ContentScale.Crop,
                     placeholder = painterResource(id = R.drawable.ic_launcher_foreground),
                 )
-                item.property.let {
+                state.location.property.let {
                     Text(
                         text = it.location,
                         Modifier.padding(vertical = dimensionResource(id = R.dimen.mediumPadding))
                     )
                 }
             }
-        } else if (error.isNotEmpty()) {
-            ErrorButton(errorText = error,viewModel)
         }
+
+        state.isLoading -> {
+            Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+                CircularProgressIndicator()
+            }
+        }
+        state.error.isNotEmpty() -> {
+            Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+                ErrorButton(errorText = state.error, viewModel)
+            }
+        }
+
     }
+
 }

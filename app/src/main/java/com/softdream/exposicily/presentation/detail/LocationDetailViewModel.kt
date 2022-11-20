@@ -2,6 +2,7 @@ package com.softdream.exposicily.presentation.detail
 
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
+
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -25,13 +26,15 @@ import java.net.UnknownHostException
 class LocationDetailViewModel(stateHandle: SavedStateHandle) : ViewModel() {
     private var restInterface: LocationApiService
     private var locationDao = LocationsDb.getDaoInstance(ExpoSicilyApplication.getAppContext())
-    var lastIDLocation: Int = 0
-    var state = mutableStateOf<LocalLocation?>(null)
-    var errorState = mutableStateOf("")
+
+    var state = mutableStateOf((LocationDetailScreenState()))
+
     private val errorHandle =
         CoroutineExceptionHandler { _, exception ->
             run {
                 Log.w(this.javaClass.simpleName, "API ERROR")
+                state.value =
+                    state.value.copy(isLoading = false, error = exception.message ?: "API ERROR")
                 exception.printStackTrace()
             }
         }
@@ -42,21 +45,22 @@ class LocationDetailViewModel(stateHandle: SavedStateHandle) : ViewModel() {
             GsonConverterFactory.create()
         ).baseUrl(BuildConfig.LOCATIONS_BASE_URL).build()
         restInterface = retrofit.create(LocationApiService::class.java)
-        lastIDLocation = stateHandle.get<Int>("location_id") ?: 0
+        val lastIDLocation = stateHandle.get<Int>("location_id") ?: 0
+        state.value = state.value.copy(lastIDLocation = lastIDLocation)
         getLocation(lastIDLocation)
     }
 
     private fun getLocation(id: Int) {
-        errorState.value = ""
+
         //Note launch use for default  Dispatchers.MAIN
         viewModelScope.launch(errorHandle) {
-            state.value = getLocationByID(id)
+            val location = getLocationByID(id)
+            state.value = state.value.copy(location = location, isLoading = false)
         }
     }
 
 
     private suspend fun getLocationByID(id: Int): LocalLocation? {
-
         return withContext(Dispatchers.IO) {
             try {
                 refreshCache(id)
@@ -65,9 +69,14 @@ class LocationDetailViewModel(stateHandle: SavedStateHandle) : ViewModel() {
                     is UnknownHostException,
                     is ConnectException,
                     is HttpException -> {
-                        if (locationDao!!.getLocationByID(id) == null)
-                            errorState.value = ExpoSicilyApplication.getAppContext()
-                                .getString(R.string.network_error)
+                        if (locationDao!!.getLocationByID(id) == null) {
+                            state.value = state.value.copy(
+                                isLoading = false,
+                                error =
+                                ExpoSicilyApplication.getAppContext()
+                                    .getString(R.string.network_error)
+                            )
+                        }
                     }
                     else -> throw  e
                 }
@@ -82,6 +91,7 @@ class LocationDetailViewModel(stateHandle: SavedStateHandle) : ViewModel() {
     }
 
     fun retryGetLocation() {
-        getLocation(lastIDLocation)
+        state.value = state.value.copy(isLoading = true, error = "")
+        getLocation(state.value.lastIDLocation)
     }
 }
