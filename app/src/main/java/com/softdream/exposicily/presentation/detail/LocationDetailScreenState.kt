@@ -1,9 +1,9 @@
 package com.softdream.exposicily.presentation.detail
 
-import com.softdream.exposicily.data.local.LocalLocation
+import com.softdream.exposicily.domain.Location
 
 data class LocationDetailScreenState(
-    val location: LocalLocation? = null,
+    val location: Location? = null,
     val isLoading: Boolean = true,
     val error: String = "",
     val lastIDLocation: Int = 0

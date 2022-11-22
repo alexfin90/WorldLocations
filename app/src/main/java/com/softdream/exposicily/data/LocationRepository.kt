@@ -3,11 +3,12 @@ package com.softdream.exposicily.data
 import com.softdream.exposicily.BuildConfig
 import com.softdream.exposicily.ExpoSicilyApplication
 import com.softdream.exposicily.R
-import com.softdream.exposicily.data.local.LocalLocation
 import com.softdream.exposicily.data.local.LocationDao
 import com.softdream.exposicily.data.local.LocationsDb
+import com.softdream.exposicily.data.local.toLocation
 import com.softdream.exposicily.data.remote.LocationApiService
 import com.softdream.exposicily.data.remote.toLocalLocation
+import com.softdream.exposicily.domain.Location
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
@@ -28,7 +29,7 @@ class LocationRepository {
         locationDao = LocationsDb.getDaoInstance(ExpoSicilyApplication.getAppContext())
     }
 
-    suspend fun getAllLocations(): List<LocalLocation> {
+    suspend fun getAllLocations(): List<Location> {
 
         return withContext(Dispatchers.IO) {
             try {
@@ -47,7 +48,7 @@ class LocationRepository {
                     else -> throw  e
                 }
             }
-            return@withContext locationDao!!.getAll()
+            return@withContext locationDao!!.getAll().map { it.toLocation() }
         }
     }
 
@@ -57,7 +58,7 @@ class LocationRepository {
         locationDao?.addAll(locations.map { it.toLocalLocation() })
     }
 
-    suspend fun getLocationByID(id: Int): LocalLocation? {
+    suspend fun getLocationByID(id: Int): Location? {
         return withContext(Dispatchers.IO) {
             try {
                 refreshCache(id)
@@ -76,7 +77,7 @@ class LocationRepository {
                     else -> throw  e
                 }
             }
-            return@withContext locationDao?.getLocationByID(id)
+            return@withContext locationDao?.getLocationByID(id)?.toLocation()
         }
     }
 

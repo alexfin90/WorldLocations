@@ -8,16 +8,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.softdream.exposicily.ExpoSicilyApplication
 import com.softdream.exposicily.R
-import com.softdream.exposicily.data.LocationRepository
+import com.softdream.exposicily.domain.GetLocationByIDUseCase
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 
 class LocationDetailViewModel(stateHandle: SavedStateHandle) : ViewModel() {
     //ViewModel only modify the UI state  and call domain layer
-    private val repository = LocationRepository()
+    private val getLocationByIDUseCase = GetLocationByIDUseCase()
     private var _state = mutableStateOf((LocationDetailScreenState()))
+
     //expose the state to compose without possibility to modify state
-    val state: State<LocationDetailScreenState>  get() = _state
+    val state: State<LocationDetailScreenState> get() = _state
 
     private val errorHandle =
         CoroutineExceptionHandler { _, exception ->
@@ -46,7 +47,7 @@ class LocationDetailViewModel(stateHandle: SavedStateHandle) : ViewModel() {
     private fun getLocation(id: Int) {
         //Note launch use for default  Dispatchers.MAIN
         viewModelScope.launch(errorHandle) {
-            val location = repository.getLocationByID(id)
+            val location = getLocationByIDUseCase(id)
             _state.value = _state.value.copy(location = location, isLoading = false)
         }
     }

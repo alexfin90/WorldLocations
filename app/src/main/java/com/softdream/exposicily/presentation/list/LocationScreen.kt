@@ -20,7 +20,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.softdream.exposicily.data.local.LocalLocation
+import com.softdream.exposicily.domain.Location
 import com.softdream.exposicily.presentation.detail.LocationDetailViewModel
 import com.softdream.exposicily.presentation.list.LocationViewModel
 
@@ -83,7 +83,7 @@ fun ErrorButton(errorText: String, viewModel: ViewModel) {
 }
 
 @Composable
-fun LocationItem(item: LocalLocation, onItemClick: (id: Int) -> Unit) {
+fun LocationItem(item: Location, onItemClick: (id: Int) -> Unit) {
     Card(
         elevation = CardDefaults.cardElevation(),
         modifier = Modifier
@@ -120,7 +120,7 @@ fun LocationDetails(
 }
 
 @Composable
-fun LocationIcon(icon: ImageVector, weight: Modifier) {
+fun LocationIcon(icon: ImageVector, modifier: Modifier) {
     Image(
         imageVector = icon,
         contentDescription = stringResource(id = R.string.icon_expo_sicily_location),
