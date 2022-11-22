@@ -1,4 +1,4 @@
-package com.softdream.exposicily
+package com.softdream.exposicily.presentation
 
 
 import android.os.Bundle
@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -19,7 +20,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
+import com.softdream.exposicily.BuildConfig
+import com.softdream.exposicily.LocationScreen
+import com.softdream.exposicily.R
 import com.softdream.exposicily.presentation.detail.LocationDetailScreen
+import com.softdream.exposicily.presentation.detail.LocationDetailViewModel
+import com.softdream.exposicily.presentation.list.LocationViewModel
 import com.softdream.exposicily.ui.theme.ExpoSicilyTheme
 
 class MainActivity : ComponentActivity() {
@@ -48,7 +54,11 @@ class MainActivity : ComponentActivity() {
         navController = rememberNavController()
         NavHost(navController, startDestination = locations) {
             composable(route = locations) {
-                LocationScreen { id -> navController.navigate("$locations/$id") }
+                val viewModel: LocationViewModel = viewModel()
+                LocationScreen(
+                    viewModel = viewModel,
+                    state = viewModel.state.value,
+                    onItemClick = { id -> navController.navigate("$locations/$id") })
             }
             composable(
                 route = "$locations/{location_id}",
@@ -61,7 +71,8 @@ class MainActivity : ComponentActivity() {
                 })
 
             ) {
-                LocationDetailScreen()
+                val viewModel: LocationDetailViewModel = viewModel()
+                LocationDetailScreen(state = viewModel.state.value, viewModel)
             }
         }
     }
@@ -70,7 +81,8 @@ class MainActivity : ComponentActivity() {
     @Composable
     fun DefaultPreview() {
         ExpoSicilyTheme {
-            LocationScreen()
+            ExpoSicilyApp()
         }
     }
+
 }

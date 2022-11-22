@@ -17,21 +17,20 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.softdream.exposicily.domain.Location
 import com.softdream.exposicily.presentation.detail.LocationDetailViewModel
+import com.softdream.exposicily.presentation.list.LocationScreenState
 import com.softdream.exposicily.presentation.list.LocationViewModel
 
 
 @Composable
-@Preview(showBackground = true)
 fun LocationScreen(
+    state: LocationScreenState,
+    viewModel: ViewModel,
     onItemClick: (id: Int) -> Unit = {}
 ) {
-    val viewModel: LocationViewModel = viewModel()
-    val state = viewModel.state.value
+
     when {
         state.locations.isNotEmpty() -> {
             LazyColumn(contentPadding = PaddingValues()) {

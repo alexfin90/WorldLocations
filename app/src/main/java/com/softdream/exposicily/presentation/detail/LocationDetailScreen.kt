@@ -13,7 +13,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.ViewModel
 import coil.compose.AsyncImage
 import com.softdream.exposicily.ErrorButton
 import com.softdream.exposicily.LocationDetails
@@ -21,9 +21,7 @@ import com.softdream.exposicily.R
 
 
 @Composable
-fun LocationDetailScreen() {
-    val viewModel: LocationDetailViewModel = viewModel()
-    val state = viewModel.state.value
+fun LocationDetailScreen(state: LocationDetailScreenState, viewModel: ViewModel) {
     when {
         state.location != null -> {
             Column(
