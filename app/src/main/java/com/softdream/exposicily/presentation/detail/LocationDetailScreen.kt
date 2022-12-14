@@ -11,7 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import coil.compose.AsyncImage
@@ -44,8 +43,7 @@ fun LocationDetailScreen(state: LocationDetailScreenState, viewModel: ViewModel)
                     contentDescription = state.location.property.site,
                     modifier = Modifier.size(400.dp, 400.dp),
                     filterQuality = FilterQuality.High,
-                    contentScale = ContentScale.Crop,
-                    placeholder = painterResource(id = R.drawable.ic_launcher_foreground),
+                    contentScale = ContentScale.Crop
                 )
                 state.location.property.let {
                     Text(
