@@ -9,12 +9,16 @@ import androidx.lifecycle.viewModelScope
 import com.softdream.exposicily.ExpoSicilyApplication
 import com.softdream.exposicily.R
 import com.softdream.exposicily.domain.GetLocationByIDUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class LocationDetailViewModel(stateHandle: SavedStateHandle) : ViewModel() {
+@HiltViewModel
+class LocationDetailViewModel @Inject constructor(private val getLocationByIDUseCase: GetLocationByIDUseCase, stateHandle: SavedStateHandle) : ViewModel() {
+
     //ViewModel only modify the UI state  and call domain layer
-    private val getLocationByIDUseCase = GetLocationByIDUseCase()
+
     private var _state = mutableStateOf((LocationDetailScreenState()))
 
     //expose the state to compose without possibility to modify state

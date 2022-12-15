@@ -1,10 +1,8 @@
 package com.softdream.exposicily.data
 
-import com.softdream.exposicily.BuildConfig
 import com.softdream.exposicily.ExpoSicilyApplication
 import com.softdream.exposicily.R
 import com.softdream.exposicily.data.local.LocationDao
-import com.softdream.exposicily.data.local.LocationsDb
 import com.softdream.exposicily.data.local.toLocation
 import com.softdream.exposicily.data.remote.LocationApiService
 import com.softdream.exposicily.data.remote.toLocalLocation
@@ -12,22 +10,25 @@ import com.softdream.exposicily.domain.Location
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import java.net.ConnectException
 import java.net.UnknownHostException
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class LocationRepository {
-    private var restInterface: LocationApiService
+@Singleton
+class LocationRepository @Inject constructor(
+    private var restInterface: LocationApiService,
     private var locationDao: LocationDao?
+) {
 
-    init {
-        val retrofit: Retrofit = Retrofit.Builder().addConverterFactory(
-            GsonConverterFactory.create()
-        ).baseUrl(BuildConfig.LOCATIONS_BASE_URL).build()
-        restInterface = retrofit.create(LocationApiService::class.java)
-        locationDao = LocationsDb.getDaoInstance(ExpoSicilyApplication.getAppContext())
-    }
+
+    /* init {
+         val retrofit: Retrofit = Retrofit.Builder().addConverterFactory(
+             GsonConverterFactory.create()
+         ).baseUrl(BuildConfig.LOCATIONS_BASE_URL).build()
+         restInterface = retrofit.create(LocationApiService::class.java)
+         locationDao = LocationsDb.getDaoInstance(ExpoSicilyApplication.getAppContext())
+     }*/
 
     suspend fun getAllLocations(): List<Location> {
 

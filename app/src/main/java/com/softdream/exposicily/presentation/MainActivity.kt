@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -27,7 +27,9 @@ import com.softdream.exposicily.presentation.detail.LocationDetailScreen
 import com.softdream.exposicily.presentation.detail.LocationDetailViewModel
 import com.softdream.exposicily.presentation.list.LocationViewModel
 import com.softdream.exposicily.ui.theme.ExpoSicilyTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     lateinit var navController: NavHostController
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,7 +56,7 @@ class MainActivity : ComponentActivity() {
         navController = rememberNavController()
         NavHost(navController, startDestination = locations) {
             composable(route = locations) {
-                val viewModel: LocationViewModel = viewModel()
+                val viewModel: LocationViewModel = hiltViewModel()
                 LocationScreen(
                     viewModel = viewModel,
                     state = viewModel.state.value,
@@ -71,7 +73,7 @@ class MainActivity : ComponentActivity() {
                 })
 
             ) {
-                val viewModel: LocationDetailViewModel = viewModel()
+                val viewModel: LocationDetailViewModel = hiltViewModel()
                 LocationDetailScreen(state = viewModel.state.value, viewModel)
             }
         }
