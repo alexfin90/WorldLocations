@@ -1,21 +1,22 @@
 package com.softdream.exposicily.presentation.detail
 
+import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.softdream.exposicily.ExpoSicilyApplication
 import com.softdream.exposicily.R
 import com.softdream.exposicily.domain.GetLocationByIDUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class LocationDetailViewModel @Inject constructor(private val getLocationByIDUseCase: GetLocationByIDUseCase, stateHandle: SavedStateHandle) : ViewModel() {
+class LocationDetailViewModel @Inject constructor( @ApplicationContext  application: Context, private val getLocationByIDUseCase: GetLocationByIDUseCase, stateHandle: SavedStateHandle) : ViewModel() {
 
     //ViewModel only modify the UI state  and call domain layer
 
@@ -29,13 +30,11 @@ class LocationDetailViewModel @Inject constructor(private val getLocationByIDUse
             run {
                 Log.d(
                     this.javaClass.simpleName,
-                    exception.message ?: ExpoSicilyApplication.getAppContext()
-                        .getString(R.string.generic_error)
+                    exception.message ?: application.getString(R.string.generic_error)
                 )
                 _state.value = _state.value.copy(
                     isLoading = false,
-                    error = exception.message ?: ExpoSicilyApplication.getAppContext()
-                        .getString(R.string.generic_error)
+                    error = exception.message ?: application.getString(R.string.generic_error)
                 )
                 exception.printStackTrace()
             }
@@ -46,6 +45,7 @@ class LocationDetailViewModel @Inject constructor(private val getLocationByIDUse
         val lastIDLocation = stateHandle.get<Int>("location_id") ?: 0
         _state.value = _state.value.copy(lastIDLocation = lastIDLocation)
         getLocation(lastIDLocation)
+
     }
 
     private fun getLocation(id: Int) {

@@ -1,12 +1,13 @@
 package com.softdream.exposicily.data
 
-import com.softdream.exposicily.ExpoSicilyApplication
+import android.content.Context
 import com.softdream.exposicily.R
 import com.softdream.exposicily.data.local.LocationDao
 import com.softdream.exposicily.data.local.toLocation
 import com.softdream.exposicily.data.remote.LocationApiService
 import com.softdream.exposicily.data.remote.toLocalLocation
 import com.softdream.exposicily.domain.Location
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
@@ -17,6 +18,7 @@ import javax.inject.Singleton
 
 @Singleton
 class LocationRepository @Inject constructor(
+    @ApplicationContext private val application : Context,
     private var restInterface: LocationApiService,
     private var locationDao: LocationDao?
 ) {
@@ -31,7 +33,6 @@ class LocationRepository @Inject constructor(
      }*/
 
     suspend fun getAllLocations(): List<Location> {
-
         return withContext(Dispatchers.IO) {
             try {
                 refreshCache()
@@ -42,8 +43,7 @@ class LocationRepository @Inject constructor(
                     is HttpException -> {
                         if (locationDao!!.getAll().isEmpty())
                             throw Exception(
-                                ExpoSicilyApplication.getAppContext()
-                                    .getString(R.string.network_error)
+                              application.getString(R.string.generic_error)
                             )
                     }
                     else -> throw  e
@@ -54,6 +54,7 @@ class LocationRepository @Inject constructor(
     }
 
     private suspend fun refreshCache() {
+
         //Note Retrofit  set behind the scenes Dispatchers.IO for all suspend methods from within its interface
         val locations = restInterface.getLocations()
         locationDao?.addAll(locations.map { it.toLocalLocation() })
@@ -70,8 +71,7 @@ class LocationRepository @Inject constructor(
                     is HttpException -> {
                         if (locationDao!!.getLocationByID(id) == null) {
                             throw Exception(
-                                ExpoSicilyApplication.getAppContext()
-                                    .getString(R.string.network_error)
+
                             )
                         }
                     }
