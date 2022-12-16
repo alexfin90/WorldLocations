@@ -7,32 +7,40 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.softdream.exposicily.R
+import com.softdream.exposicily.data.di.MainDispatcher
 import com.softdream.exposicily.domain.GetLocationsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
 @HiltViewModel
-class LocationViewModel @Inject constructor(@ApplicationContext application: Context, private val getLocationsUseCase : GetLocationsUseCase) : ViewModel() {
-    //ViewModel only modify the UI state  and call domain layer
+class LocationViewModel @Inject constructor(
+    private val getLocationsUseCase: GetLocationsUseCase,
+    @MainDispatcher private val dispatcher: CoroutineDispatcher,
+    @ApplicationContext private val application: Context?
+) : ViewModel() {
 
+    //ViewModel only modify the UI state  and call domain layer
     private val _state = mutableStateOf(LocationScreenState(listOf()))
+
     //expose the state to compose without possibility to modify state
-    val state : State<LocationScreenState> get() = _state
+    val state: State<LocationScreenState> get() = _state
 
     private val errorHandle =
         CoroutineExceptionHandler { _, exception ->
             run {
                 Log.d(
                     this.javaClass.simpleName,
-                    exception.message ?: application.getString(R.string.generic_error)
+                    exception.message ?: application.let { it!!.getString(R.string.generic_error) }
                 )
                 _state.value = _state.value.copy(
                     isLoading = false,
-                    error = exception.message ?: application.getString(R.string.generic_error)
+                    error = exception.message
+                        ?: application.let { it!!.getString(R.string.generic_error) }
                 )
                 exception.printStackTrace()
             }
@@ -44,7 +52,7 @@ class LocationViewModel @Inject constructor(@ApplicationContext application: Con
 
     private fun getLocations() {
         //Note launch use for default  Dispatchers.MAIN
-        viewModelScope.launch(errorHandle) {
+        viewModelScope.launch(errorHandle + dispatcher) {
             val locations = getLocationsUseCase()
             _state.value = _state.value.copy(locations = locations, isLoading = false)
         }
