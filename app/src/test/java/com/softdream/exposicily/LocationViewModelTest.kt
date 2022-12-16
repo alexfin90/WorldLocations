@@ -2,6 +2,7 @@ package com.softdream.exposicily
 
 import FakeApiService
 import com.softdream.exposicily.data.LocationRepository
+import com.softdream.exposicily.data.MockContent
 import com.softdream.exposicily.domain.GetLocationsUseCase
 import com.softdream.exposicily.presentation.list.LocationScreenState
 import com.softdream.exposicily.presentation.list.LocationViewModel
@@ -39,7 +40,7 @@ class LocationViewModelTest {
         val currentSate = testVM.state.value
         assert(
             currentSate == LocationScreenState(
-                locations = DummyContent.getDomainLocation(),
+                locations = MockContent.getDomainLocation(),
                 isLoading = false,
                 error = ""
             )
