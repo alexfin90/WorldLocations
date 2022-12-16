@@ -1,5 +1,5 @@
-# ExpoSicily
-Demo Android APP showing Unesco site in Sicily Italy
+# WorldLocations
+Demo Android APP showing World Location site for Prima Assignment
 using:
 
 - Compose

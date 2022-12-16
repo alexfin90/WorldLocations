@@ -1,9 +1,7 @@
 <resources>
-    <string name="app_name">ExpoSicily</string>
-    <string name="icon_expo_sicily_location">Icon of a location point for expoSicily App</string>
-
+    <string name="app_name">WorldLocations</string>
+    <string name="icon_location">Icon of a location point for WorldLocation App</string>
     <string name="locationsScreen">locations</string>
     <string name="network_error">"Network Error\nTap to Retry!"</string>
     <string name="generic_error"> Generic Error</string>
-
 </resources>

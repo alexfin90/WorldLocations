@@ -1,18 +1,16 @@
 plugins {
     id 'com.android.application'
-    id 'com.google.gms.google-services'
-    id 'com.google.firebase.crashlytics'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
 }
 
 android {
-    namespace 'com.softdream.exposicily'
+    namespace 'com.softdream.worldlocations'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.softdream.exposicily"
+        applicationId "com.softdream.worldlocations"
         minSdk 22
         targetSdk 33
         versionCode 1
@@ -71,13 +69,6 @@ dependencies {
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_ui_version"
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_ui_version"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_ui_version"
-
-    // Import the Firebase BoM
-    implementation platform("com.google.firebase:firebase-bom:$firebase_bom_version")
-    // When using the BoM, don't specify versions in Firebase dependencies
-    implementation 'com.google.firebase:firebase-analytics-ktx'
-    implementation 'com.google.firebase:firebase-crashlytics'
-    implementation 'com.google.firebase:firebase-analytics'
 
     implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1'
 
