@@ -16,13 +16,13 @@ android {
         versionCode 1
         versionName "1.0"
         buildConfigField "String", "LOCATIONS_BASE_URL", "\"https://restcountries.com/\""
-        buildConfigField "String", "DEEPLINK_BASE_URL", "\"exposicily://location.detail/\""
+        buildConfigField "String", "DEEPLINK_BASE_URL", "\"worldLocations://location.detail/\""
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary true
         }
-        manifestPlaceholders = [deeplink_scheme: 'exposicily', deeplink_host: 'location.detail']
+        manifestPlaceholders = [deeplink_scheme: 'worldlocations', deeplink_host: 'location.detail']
     }
 
     buildTypes {
