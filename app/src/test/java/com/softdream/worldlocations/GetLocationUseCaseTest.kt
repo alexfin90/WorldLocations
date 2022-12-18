@@ -1,13 +1,8 @@
 package com.softdream.worldlocations
 
-import FakeApiService
-import com.softdream.worldlocations.data.LocationRepository
-import com.softdream.worldlocations.data.MockContent
-import com.softdream.worldlocations.domain.GetLocationsUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
-import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
@@ -20,7 +15,7 @@ class GetLocationUseCaseTest {
     @Test
     fun sortLocationTest () = scope.runTest {
 
-        val locationRepository = LocationRepository(FakeApiService(),FakeRoomDao(),dispatcher)
+        /*val locationRepository = LocationRepository(FakeApiService(),FakeRoomDao(),dispatcher)
         val getSortedLocationUseCase = GetLocationsUseCase(locationRepository)
 
         //Preload Data
@@ -36,7 +31,7 @@ class GetLocationUseCaseTest {
         println(sortedLocations.toString())
         println(mockedLocation.toString())
 
-        assert(sortedLocations == mockedLocation)
+        assert(sortedLocations == mockedLocation)*/
 
     }
 

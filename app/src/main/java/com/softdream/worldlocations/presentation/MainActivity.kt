@@ -68,8 +68,8 @@ class MainActivity : ComponentActivity() {
                     uriPattern = "${BuildConfig.DEEPLINK_BASE_URL}{location_id}"
                 }),
                 arguments = listOf(navArgument("location_id") {
-                    type = NavType.IntType
-                    defaultValue = 0
+                    type = NavType.StringType
+                    defaultValue = ""
                 })
 
             ) {

@@ -28,7 +28,7 @@ import com.softdream.worldlocations.presentation.list.LocationViewModel
 fun LocationScreen(
     state: LocationScreenState,
     viewModel: ViewModel,
-    onItemClick: (id: Int) -> Unit = {}
+    onItemClick: (id: String) -> Unit = {}
 ) {
 
     when {
@@ -82,7 +82,7 @@ fun ErrorButton(errorText: String, viewModel: ViewModel) {
 }
 
 @Composable
-fun LocationItem(item: Location, onItemClick: (id: Int) -> Unit) {
+fun LocationItem(item: Location, onItemClick: (id: String) -> Unit) {
     Card(
         elevation = CardDefaults.cardElevation(),
         modifier = Modifier
@@ -94,13 +94,13 @@ fun LocationItem(item: Location, onItemClick: (id: Int) -> Unit) {
             modifier = Modifier.padding(dimensionResource(R.dimen.mediumPadding))
         ) {
             LocationIcon(Icons.Filled.Place, Modifier.weight(0.15f))
-            LocationDetails(item.property.site, item.property.location, Modifier.weight(0.85f))
+            LocationInfo(item.nameProperty.common + " " + item.flag, item.nameProperty.official, Modifier.weight(0.85f))
         }
     }
 }
 
 @Composable
-fun LocationDetails(
+fun LocationInfo(
     title: String,
     message: String,
     modifier: Modifier,
@@ -117,6 +117,9 @@ fun LocationDetails(
         )
     }
 }
+
+
+
 
 @Composable
 fun LocationIcon(icon: ImageVector, modifier: Modifier) {

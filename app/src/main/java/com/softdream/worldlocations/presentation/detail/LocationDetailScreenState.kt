@@ -6,5 +6,5 @@ data class LocationDetailScreenState(
     val location: Location? = null,
     val isLoading: Boolean = true,
     val error: String = "",
-    val lastIDLocation: Int = 0
+    val lastIDLocation: String = ""
 )

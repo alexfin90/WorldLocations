@@ -54,7 +54,7 @@ class LocationRepository @Inject constructor(
         locationDao?.addAll(locations.map { it.toLocalLocation() })
     }
 
-    suspend fun getLocationByID(id: Int): Location? {
+    suspend fun getLocationByID(id: String): Location? {
         return withContext(dispatcher) {
             try {
                 refreshCache(id)
@@ -76,8 +76,8 @@ class LocationRepository @Inject constructor(
         }
     }
 
-    private suspend fun refreshCache(id: Int) {
-        val responseMap = restInterface.getLocation(id)
-        locationDao?.addLocation(responseMap.values.first().toLocalLocation())
+    private suspend fun refreshCache(id: String) {
+        val response = restInterface.getLocationByCode(id)
+        locationDao?.addLocation(response.first().toLocalLocation())
     }
 }

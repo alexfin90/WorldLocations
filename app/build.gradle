@@ -15,7 +15,7 @@ android {
         targetSdk 33
         versionCode 1
         versionName "1.0"
-        buildConfigField "String", "LOCATIONS_BASE_URL", "\"https://exposicily-23212-default-rtdb.europe-west1.firebasedatabase.app/\""
+        buildConfigField "String", "LOCATIONS_BASE_URL", "\"https://restcountries.com/\""
         buildConfigField "String", "DEEPLINK_BASE_URL", "\"exposicily://location.detail/\""
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

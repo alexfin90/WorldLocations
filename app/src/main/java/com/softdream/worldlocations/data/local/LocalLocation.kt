@@ -4,18 +4,36 @@ import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.softdream.worldlocations.domain.FlagsProperty
 import com.softdream.worldlocations.domain.Location
-import com.softdream.worldlocations.domain.LocationProperty
+import com.softdream.worldlocations.domain.NameProperty
 
 
 @Entity(tableName = "locations")
 data class LocalLocation(
-    @ColumnInfo(name = "r_id")
-    @PrimaryKey val id: Int,
-    @Embedded val property: LocalLocationProperty
+    @ColumnInfo(name = "cca2")
+    @PrimaryKey val id: String,
+    @ColumnInfo(name = "region")
+    val region: String?,
+    @ColumnInfo(name = "subregion")
+    val subregion: String?,
+    @ColumnInfo(name = "flag")
+    val flag: String?,
+    @ColumnInfo(name = "population")
+    val population: Long?,
+    @ColumnInfo(name = "area")
+    val area: Double?,
+    @Embedded val nameProperty: LocalNameProperty,
+    @Embedded val flagsProperty: LocalFlagsProperty
 )
 
 fun LocalLocation.toLocation() = Location(
     id = id,
-    property = LocationProperty(property.site,property.location,property.shortDescription,property.starsCounter,property.imageUrl)
+    region = region,
+    subregion = subregion,
+    population = population,
+    area = area,
+    flag = flag,
+    nameProperty = NameProperty(nameProperty.common, nameProperty.official),
+    flagsProperty = FlagsProperty(flagsProperty.pngURL, flagsProperty.svgURL)
 )

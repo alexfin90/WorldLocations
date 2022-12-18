@@ -42,13 +42,13 @@ class LocationDetailViewModel @Inject constructor( @ApplicationContext  applicat
 
 
     init {
-        val lastIDLocation = stateHandle.get<Int>("location_id") ?: 0
+        val lastIDLocation = stateHandle.get<String>("location_id") ?: ""
         _state.value = _state.value.copy(lastIDLocation = lastIDLocation)
         getLocation(lastIDLocation)
 
     }
 
-    private fun getLocation(id: Int) {
+    private fun getLocation(id: String) {
         //Note launch use for default  Dispatchers.MAIN
         viewModelScope.launch(errorHandle) {
             val location = getLocationByIDUseCase(id)
