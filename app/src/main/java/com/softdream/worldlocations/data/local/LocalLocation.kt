@@ -23,6 +23,13 @@ data class LocalLocation(
     val population: Long?,
     @ColumnInfo(name = "area")
     val area: Double?,
+
+    @ColumnInfo(name = "lat")
+    val lat: Double?,
+    @ColumnInfo(name = "long")
+    val lng: Double?,
+
+
     @Embedded val nameProperty: LocalNameProperty,
     @Embedded val flagsProperty: LocalFlagsProperty
 )
@@ -34,6 +41,8 @@ fun LocalLocation.toLocation() = Location(
     population = population,
     area = area,
     flag = flag,
+    lat = lat,
+    lng = lng,
     nameProperty = NameProperty(nameProperty.common, nameProperty.official),
     flagsProperty = FlagsProperty(flagsProperty.pngURL, flagsProperty.svgURL)
 )

@@ -1,9 +1,6 @@
 package com.softdream.worldlocations.presentation.detail
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
@@ -19,6 +16,12 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
 import coil.compose.AsyncImage
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.MarkerState
+import com.google.maps.android.compose.rememberCameraPositionState
 import com.softdream.worldlocations.ErrorButton
 import com.softdream.worldlocations.R
 import com.softdream.worldlocations.domain.Location
@@ -28,6 +31,11 @@ import com.softdream.worldlocations.domain.Location
 fun LocationDetailScreen(state: LocationDetailScreenState, viewModel: ViewModel) {
     when {
         state.location != null -> {
+            val point = LatLng(state.location.lat ?: 0.0,
+                state.location.lng ?: 0.0)
+            val cameraPositionState = rememberCameraPositionState {
+                position = CameraPosition.fromLatLngZoom(point, 2f)
+            }
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
@@ -49,12 +57,20 @@ fun LocationDetailScreen(state: LocationDetailScreenState, viewModel: ViewModel)
                     contentScale = ContentScale.Crop
                 )
                 state.location.nameProperty.common.let {
-                    if (it != null) {
-                        Text(
-                            text = stringResource(id = R.string.Flag_of) + " "+ state.location.nameProperty.common ,
-                            Modifier.padding(vertical = dimensionResource(id = R.dimen.mediumPadding))
-                        )
-                    }
+                    Text(
+                        text = stringResource(id = R.string.Flag_of) +" "+ state.location.nameProperty.common ,
+                        Modifier.padding(vertical = dimensionResource(id = R.dimen.mediumPadding))
+                    )
+                }
+                GoogleMap(
+                    modifier = Modifier.fillMaxHeight(),
+                    cameraPositionState = cameraPositionState
+                ) {
+                    Marker(
+                        state = MarkerState(position = point),
+                        title = state.location.nameProperty.common,
+                        snippet = state.location.nameProperty.common
+                    )
                 }
             }
         }

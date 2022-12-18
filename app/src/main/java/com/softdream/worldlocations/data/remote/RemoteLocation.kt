@@ -22,7 +22,9 @@ data class RemoteLocation(
     @SerializedName("area")
     val area: Double?,
     @SerializedName("flags")
-    val flags: RemoteFlagsProperty
+    val flags: RemoteFlagsProperty,
+    @SerializedName("latlng")
+    val latlng: List<Double>
 )
 
 fun RemoteLocation.toLocalLocation() = LocalLocation(
@@ -32,6 +34,8 @@ fun RemoteLocation.toLocalLocation() = LocalLocation(
     population = population,
     flag = flag,
     area = area,
+    lat = latlng[0],
+    lng = latlng[1],
     nameProperty = LocalNameProperty(name.common, name.official),
     flagsProperty = LocalFlagsProperty(flags.pngURL, flags.svgURL)
 )
