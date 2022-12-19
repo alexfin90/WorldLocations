@@ -5,7 +5,7 @@ import com.softdream.worldlocations.data.local.LocationDao
 import kotlinx.coroutines.delay
 
 class FakeRoomDao : LocationDao {
-    private var locations = HashMap<Int, LocalLocation>()
+    private var locations = HashMap<String, LocalLocation>()
 
     override suspend fun getAll(): List<LocalLocation> {
         delay(500)
@@ -16,7 +16,7 @@ class FakeRoomDao : LocationDao {
         locations.forEach { this.locations[it.id] = it }
     }
 
-    override suspend fun getLocationByID(id: Int): LocalLocation? {
+    override suspend fun getLocationByID(id: String): LocalLocation? {
         return this.locations[id]
     }
 
