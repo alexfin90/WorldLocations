@@ -45,7 +45,6 @@ class LocationDetailViewModel @Inject constructor( @ApplicationContext  applicat
         val lastIDLocation = stateHandle.get<String>("location_id") ?: ""
         _state.value = _state.value.copy(lastIDLocation = lastIDLocation)
         getLocation(lastIDLocation)
-
     }
 
     private fun getLocation(id: String) {
