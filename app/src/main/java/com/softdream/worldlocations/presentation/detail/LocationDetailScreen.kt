@@ -106,6 +106,12 @@ fun LocationDetails(
                 .alpha(0.8f)
                 .padding(top = dimensionResource(id = R.dimen.mediumPadding))
         )
+        Text(text =  stringResource(id = R.string.Capital) +" "+ location.capital,
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier
+                .alpha(0.8f)
+                .padding(top = dimensionResource(id = R.dimen.mediumPadding))
+        )
         Text(text =  stringResource(id = R.string.Population) +" "+ location.population,
             style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier

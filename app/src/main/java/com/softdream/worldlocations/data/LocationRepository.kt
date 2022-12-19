@@ -35,7 +35,7 @@ class LocationRepository @Inject constructor(
                     is UnknownHostException,
                     is ConnectException,
                     is HttpException -> {
-                        if (locationDao!!.getAll().isEmpty())
+                        if (locationDao.getAll().isEmpty())
                             throw Exception(
                               application?.getString(R.string.generic_error)
                             )
@@ -43,7 +43,7 @@ class LocationRepository @Inject constructor(
                     else -> throw  e
                 }
             }
-            return@withContext locationDao!!.getAll().map { it.toLocation() }
+            return@withContext locationDao.getAll().map { it.toLocation() }
         }
     }
 
@@ -51,7 +51,7 @@ class LocationRepository @Inject constructor(
 
         //Note Retrofit  set behind the scenes Dispatchers.IO for all suspend methods from within its interface
         val locations = restInterface.getLocations()
-        locationDao?.addAll(locations.map { it.toLocalLocation() })
+        locationDao.addAll(locations.map { it.toLocalLocation() })
     }
 
     suspend fun getLocationByID(id: String): Location? {
@@ -63,7 +63,7 @@ class LocationRepository @Inject constructor(
                     is UnknownHostException,
                     is ConnectException,
                     is HttpException -> {
-                        if (locationDao!!.getLocationByID(id) == null) {
+                        if (locationDao.getLocationByID(id) == null) {
                             throw Exception(
 
                             )
@@ -72,12 +72,12 @@ class LocationRepository @Inject constructor(
                     else -> throw  e
                 }
             }
-            return@withContext locationDao?.getLocationByID(id)?.toLocation()
+            return@withContext locationDao.getLocationByID(id)?.toLocation()
         }
     }
 
     private suspend fun refreshCache(id: String) {
         val response = restInterface.getLocationByCode(id)
-        locationDao?.addLocation(response.first().toLocalLocation())
+        locationDao.addLocation(response.first().toLocalLocation())
     }
 }

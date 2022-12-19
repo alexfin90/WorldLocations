@@ -11,5 +11,5 @@
     <string name="Region"> Region: </string>
     <string name="Subregion"> Subregion: </string>
     <string name="LocationCode"> Location Code: </string>
-
+    <string name="Capital"> Capital: </string>
 </resources>

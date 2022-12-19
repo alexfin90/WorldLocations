@@ -13,15 +13,15 @@ object MockContent {
     fun getDomainLocation() = arrayListOf(
         Location(
             "IT", "Europe", "Sud Europe", NameProperty("Italia", "Repubblica Italiana"),
-            FlagsProperty("", ""), "", 600000, 5555.4, 32.4, 34.4
+            FlagsProperty("", ""), "", 600000, 5555.4, "Roma",32.4, 34.4
         ),
         Location(
             "SPA", "Europe", "Sud Europe", NameProperty("Spagna", "Repubblica Italiana"),
-            FlagsProperty("", ""), "", 500000, 5555.4, 32.4, 34.4
+            FlagsProperty("", ""), "", 500000, 5555.4, "Madrid", 32.4, 34.4
         ),
         Location(
             "UK", "Europe", "Nord Europe", NameProperty("Regno Unito", "UK"),
-            FlagsProperty("", ""), "", 300000, 5555.4, 32.4, 34.4
+            FlagsProperty("", ""), "", 300000, 5555.4, "Londra", 32.4, 34.4
         ),
     )
 
@@ -35,7 +35,8 @@ object MockContent {
             it.population,
             it.area,
             RemoteFlagsProperty(it.flagsProperty.pngURL, it.flagsProperty.svgURL),
-            listOf(it.lat, it.lng) as List<Double>
+            listOf(it.lat, it.lng) as List<Double>,
+            listOf(it.capital)
         )
     }
 }

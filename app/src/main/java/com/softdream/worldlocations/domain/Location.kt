@@ -10,6 +10,7 @@ data class Location(
     val flag: String?,
     val population: Long?,
     val area: Double?,
+    val capital : String,
     val lat: Double?,
     val lng: Double?,
 )
