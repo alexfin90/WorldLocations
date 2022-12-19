@@ -10,12 +10,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
-import coil.compose.AsyncImage
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
@@ -27,6 +27,7 @@ import com.softdream.worldlocations.R
 import com.softdream.worldlocations.domain.Location
 
 
+@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun LocationDetailScreen(state: LocationDetailScreenState, viewModel: ViewModel) {
     when {
@@ -50,10 +51,9 @@ fun LocationDetailScreen(state: LocationDetailScreenState, viewModel: ViewModel)
                     Modifier.padding(bottom = dimensionResource(id = R.dimen.extraLargePadding)),
                     Alignment.CenterHorizontally
                 )
-                AsyncImage(
+                GlideImage(
                     model = state.location.flagsProperty.pngURL,
                     contentDescription = state.location.nameProperty.common,
-                    filterQuality = FilterQuality.High,
                     contentScale = ContentScale.Crop
                 )
                 state.location.nameProperty.common.let {

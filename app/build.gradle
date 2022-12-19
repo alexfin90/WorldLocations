@@ -15,7 +15,7 @@ android {
 
     defaultConfig {
         applicationId "com.softdream.worldlocations"
-        minSdk 22
+        minSdk 21
         targetSdk 33
         versionCode 1
         versionName "1.0"
@@ -90,8 +90,8 @@ dependencies {
     implementation "com.google.code.gson:gson:$gson_version"
     //Navigation Compose
     implementation "androidx.navigation:navigation-compose:$nav_compose_version"
-    //Image Loading - Coil
-    implementation("io.coil-kt:coil-compose:$coil_version")
+    //Image Loading - Glide / Coil is 21+
+    implementation("com.github.bumptech.glide:compose:$glide_version")
 
     //Offline support DB
     implementation "androidx.room:room-runtime:$room_version"
