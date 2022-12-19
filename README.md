@@ -7,6 +7,9 @@ using:
 - Clean Architecture
 - Navigation
 - Coroutines
+- DI Hilt Android
+- Google Maps API
+- Unit Test
 
 > Please follow and :star2: the project to give support.
 
