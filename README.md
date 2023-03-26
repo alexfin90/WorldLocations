@@ -1,6 +1,5 @@
 # WorldLocations
-Demo Android APP showing World Location site for Prima Assignment
-using:
+Demo Android APP showing World Location site using:
 
 - Compose
 - Material3
